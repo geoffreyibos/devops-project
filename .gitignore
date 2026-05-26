@@ -1,0 +1,44 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.env
+terraform.tfvars
+vault.yml
+*.vault
+
+# Ansible
+*.retry
+ansible/group_vars/vault.yml
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Node / frontend
+node_modules/
+dist/
+build/
+
+# Java / backend
+target/
+*.jar
+*.war
+
+# Python / Molecule
+__pycache__/
+.pytest_cache/
+.molecule/
