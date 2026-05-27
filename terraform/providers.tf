@@ -12,3 +12,9 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+random = {
+  source  = "hashicorp/random"
+  version = "~> 3.6"
+}
+
