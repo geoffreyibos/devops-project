@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DevOps S8 Vote App</title>
+</head>
+<body>
+  <h1>Vote App</h1>
+  <p>Votes : <span id="votes">0</span></p>
+  <button onclick="vote()">Voter</button>
+
+  <script>
+    async function loadVotes() {
+      const res = await fetch("/api/votes");
+      const data = await res.json();
+      document.getElementById("votes").textContent = data.votes;
+    }
+
+    async function vote() {
+      const res = await fetch("/api/vote", { method: "POST" });
+      const data = await res.json();
+      document.getElementById("votes").textContent = data.votes;
+    }
+
+    loadVotes();
+  </script>
+</body>
+</html>
+
