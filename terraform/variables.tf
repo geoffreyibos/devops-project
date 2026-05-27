@@ -22,3 +22,13 @@ variable "db_password" {
   type      = string
   sensitive = true
 }
+
+variable "ssh_public_key_path" {
+  type    = string
+  default = "~/.ssh/devops_s8.pub"
+}
+
+variable "allowed_ssh_cidr" {
+  type = string
+}
+

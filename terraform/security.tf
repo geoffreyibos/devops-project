@@ -46,7 +46,7 @@ resource "aws_security_group" "app" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["159.117.224.19/32"]
+    cidr_blocks = [var.allowed_ssh_cidr]
   }
 
   egress {
