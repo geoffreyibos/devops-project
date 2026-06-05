@@ -1,3 +1,4 @@
+---
 - name: Configure application servers
   hosts: app
   become: true

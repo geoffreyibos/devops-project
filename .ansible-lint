@@ -1,0 +1,5 @@
+---
+exclude_paths:
+  - .venv/
+  - .molecule/
+  - ansible/inventories/dev/group_vars/all/vault.yml
