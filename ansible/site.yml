@@ -1,0 +1,10 @@
+- name: Configure application servers
+  hosts: app
+  become: true
+  roles:
+    - role: database
+      tags: [database]
+    - role: application
+      tags: [application]
+    - role: backup
+      tags: [backup]
