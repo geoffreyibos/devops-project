@@ -1,6 +1,6 @@
 ---
 - name: Install required packages
-  apt:
+  ansible.builtin.apt:
     name:
       - nginx
       - nodejs
@@ -9,45 +9,51 @@
     update_cache: true
 
 - name: Create application directory
-  file:
+  ansible.builtin.file:
     path: /opt/vote-app
     state: directory
     mode: "0755"
 
 - name: Copy backend
-  copy:
-    src: "{{ playbook_dir }}/../app/backend/"
+  ansible.builtin.copy:
+    src: "{{ app_backend_src | default(playbook_dir + '/../app/backend/') }}"
     dest: /opt/vote-app/backend/
+    mode: "0755"
 
 - name: Copy frontend
-  copy:
-    src: "{{ playbook_dir }}/../app/frontend/"
+  ansible.builtin.copy:
+    src: "{{ app_frontend_src | default(playbook_dir + '/../app/frontend/') }}"
     dest: /var/www/html/
+    mode: "0644"
 
 - name: Install backend dependencies
-  npm:
-    path: /opt/vote-app/backend
+  ansible.builtin.command:
+    cmd: npm install
+    chdir: /opt/vote-app/backend
+  changed_when: true
 
 - name: Deploy systemd service
-  template:
+  ansible.builtin.template:
     src: app.service.j2
     dest: /etc/systemd/system/vote-app.service
+    mode: "0644"
 
 - name: Enable and start backend service
-  systemd:
+  ansible.builtin.systemd:
     name: vote-app
     enabled: true
     state: restarted
     daemon_reload: true
 
 - name: Deploy nginx configuration
-  template:
+  ansible.builtin.template:
     src: nginx.conf.j2
     dest: /etc/nginx/sites-available/default
+    mode: "0644"
   notify: Restart nginx
 
 - name: Ensure nginx is started
-  systemd:
+  ansible.builtin.systemd:
     name: nginx
     enabled: true
     state: started

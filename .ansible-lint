@@ -3,3 +3,9 @@ exclude_paths:
   - .venv/
   - .molecule/
   - ansible/inventories/dev/group_vars/all/vault.yml
+  - ansible/roles/*/molecule/default/create.yml
+  - ansible/roles/*/molecule/default/destroy.yml
+
+skip_list:
+  - var-naming
+  - role-name

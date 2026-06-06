@@ -1,45 +1,39 @@
 ---
 - name: Install backup dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - postgresql-client
       - python3-pip
-      - pipx
+      - cron
     state: present
     update_cache: true
 
-- name: Install AWS CLI with pipx
-  community.general.pipx:
+- name: Install AWS CLI with pip
+  ansible.builtin.pip:
     name: awscli
-    state: present
-
-- name: Create symbolic link for aws command
-  file:
-    src: /root/.local/bin/aws
-    dest: /usr/local/bin/aws
-    state: link
-    force: true
+    executable: pip3
+    break_system_packages: true
 
 - name: Create backup directory
-  file:
+  ansible.builtin.file:
     path: /opt/backups
     state: directory
     mode: "0755"
 
 - name: Deploy backup script
-  template:
+  ansible.builtin.template:
     src: backup.sh.j2
     dest: /opt/backups/backup.sh
     mode: "0755"
 
 - name: Create AWS config directory
-  file:
+  ansible.builtin.file:
     path: /root/.aws
     state: directory
     mode: "0700"
 
 - name: Configure AWS credentials
-  copy:
+  ansible.builtin.copy:
     dest: /root/.aws/credentials
     mode: "0600"
     content: |
@@ -48,9 +42,8 @@
       aws_secret_access_key={{ vault_aws_secret_access_key }}
 
 - name: Schedule daily backup cron
-  cron:
+  ansible.builtin.cron:
     name: "PostgreSQL backup to S3"
     minute: "0"
     hour: "2"
     job: "/opt/backups/backup.sh"
-

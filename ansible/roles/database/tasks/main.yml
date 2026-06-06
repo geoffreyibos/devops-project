@@ -1,12 +1,12 @@
 ---
 - name: Install PostgreSQL client
-  apt:
+  ansible.builtin.apt:
     name: postgresql-client
     state: present
     update_cache: true
 
 - name: Initialize votes table
-  shell: |
+  ansible.builtin.shell: |
     PGPASSWORD="{{ vault_db_password }}" psql \
       -h {{ db_host }} \
       -U appuser \
@@ -17,6 +17,6 @@
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
       "
-  environment:
-    PGPASSWORD: "{{ vault_db_password }}"
-
+  changed_when: false
+  tags:
+    - database_schema

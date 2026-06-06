@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    db_host: "localhost"
+    s3_bucket_name: "test-bucket"
+    vault_db_password: "test-password"
+    vault_aws_access_key_id: "test-access-key"
+    vault_aws_secret_access_key: "test-secret-key"
+  pre_tasks:
+    - name: Install Python for Ansible
+      ansible.builtin.raw: apt-get update && apt-get install -y python3
+      changed_when: true
+
+  tasks:
+    - name: Apply backup role
+      ansible.builtin.include_role:
+        name: ../../..

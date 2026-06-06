@@ -1,0 +1,17 @@
+---
+- name: Verify application role
+  hosts: all
+  become: true
+  tasks:
+    - name: Check nginx service
+      ansible.builtin.service_facts:
+
+    - name: Assert nginx is running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['nginx.service'].state == 'running'
+
+    - name: Check port 80
+      ansible.builtin.wait_for:
+        port: 80
+        timeout: 5

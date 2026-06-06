@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    app_backend_src: "../../../../../app/backend/"
+    app_frontend_src: "../../../../../app/frontend/"
+    db_host: "localhost"
+    vault_db_password: "test"
+  pre_tasks:
+    - name: Install Python for Ansible
+      ansible.builtin.raw: apt-get update && apt-get install -y python3
+      changed_when: true
+
+  tasks:
+    - name: Apply application role
+      ansible.builtin.include_role:
+        name: ../../..

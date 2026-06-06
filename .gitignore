@@ -42,3 +42,6 @@ target/
 __pycache__/
 .pytest_cache/
 .molecule/
+
+# Python virtual environment
+.venv/

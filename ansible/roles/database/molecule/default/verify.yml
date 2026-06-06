@@ -1,0 +1,8 @@
+---
+- name: Verify database role
+  hosts: all
+  become: true
+  tasks:
+    - name: Check psql command exists
+      ansible.builtin.command: which psql
+      changed_when: false
