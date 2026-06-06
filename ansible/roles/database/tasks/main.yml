@@ -1,0 +1,22 @@
+---
+- name: Install PostgreSQL client
+  apt:
+    name: postgresql-client
+    state: present
+    update_cache: true
+
+- name: Initialize votes table
+  shell: |
+    PGPASSWORD="{{ vault_db_password }}" psql \
+      -h {{ db_host }} \
+      -U appuser \
+      -d appdb \
+      -c "
+      CREATE TABLE IF NOT EXISTS votes (
+        id SERIAL PRIMARY KEY,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      "
+  environment:
+    PGPASSWORD: "{{ vault_db_password }}"
+
