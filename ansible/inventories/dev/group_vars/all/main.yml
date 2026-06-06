@@ -1,0 +1,3 @@
+---
+db_host: "devops-s8-postgres.ch44qgg088kb.eu-west-3.rds.amazonaws.com"
+s3_bucket_name: "devops-s8-backups-8f3c7af1"

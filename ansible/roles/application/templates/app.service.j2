@@ -1,0 +1,20 @@
+[Unit]
+Description=Vote App Backend
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/vote-app/backend
+ExecStart=/usr/bin/node server.js
+Restart=always
+
+Environment=DB_HOST={{ db_host }}
+Environment=DB_NAME=appdb
+Environment=DB_USER=appuser
+Environment=DB_PASSWORD={{ vault_db_password }}
+
+User=root
+
+[Install]
+WantedBy=multi-user.target
+

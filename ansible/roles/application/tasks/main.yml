@@ -1,0 +1,53 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - nginx
+      - nodejs
+      - npm
+    state: present
+    update_cache: true
+
+- name: Create application directory
+  file:
+    path: /opt/vote-app
+    state: directory
+    mode: "0755"
+
+- name: Copy backend
+  copy:
+    src: "{{ playbook_dir }}/../app/backend/"
+    dest: /opt/vote-app/backend/
+
+- name: Copy frontend
+  copy:
+    src: "{{ playbook_dir }}/../app/frontend/"
+    dest: /var/www/html/
+
+- name: Install backend dependencies
+  npm:
+    path: /opt/vote-app/backend
+
+- name: Deploy systemd service
+  template:
+    src: app.service.j2
+    dest: /etc/systemd/system/vote-app.service
+
+- name: Enable and start backend service
+  systemd:
+    name: vote-app
+    enabled: true
+    state: restarted
+    daemon_reload: true
+
+- name: Deploy nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: Restart nginx
+
+- name: Ensure nginx is started
+  systemd:
+    name: nginx
+    enabled: true
+    state: started
