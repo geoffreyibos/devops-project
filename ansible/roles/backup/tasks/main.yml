@@ -1,0 +1,56 @@
+---
+- name: Install backup dependencies
+  apt:
+    name:
+      - postgresql-client
+      - python3-pip
+      - pipx
+    state: present
+    update_cache: true
+
+- name: Install AWS CLI with pipx
+  community.general.pipx:
+    name: awscli
+    state: present
+
+- name: Create symbolic link for aws command
+  file:
+    src: /root/.local/bin/aws
+    dest: /usr/local/bin/aws
+    state: link
+    force: true
+
+- name: Create backup directory
+  file:
+    path: /opt/backups
+    state: directory
+    mode: "0755"
+
+- name: Deploy backup script
+  template:
+    src: backup.sh.j2
+    dest: /opt/backups/backup.sh
+    mode: "0755"
+
+- name: Create AWS config directory
+  file:
+    path: /root/.aws
+    state: directory
+    mode: "0700"
+
+- name: Configure AWS credentials
+  copy:
+    dest: /root/.aws/credentials
+    mode: "0600"
+    content: |
+      [default]
+      aws_access_key_id={{ vault_aws_access_key_id }}
+      aws_secret_access_key={{ vault_aws_secret_access_key }}
+
+- name: Schedule daily backup cron
+  cron:
+    name: "PostgreSQL backup to S3"
+    minute: "0"
+    hour: "2"
+    job: "/opt/backups/backup.sh"
+

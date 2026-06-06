@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+DATE=$(date +%Y%m%d-%H%M%S)
+BACKUP_FILE="/tmp/postgres-$DATE.sql"
+
+export PGPASSWORD="{{ vault_db_password }}"
+
+pg_dump \
+  -h {{ db_host }} \
+  -U appuser \
+  -d appdb \
+  > "$BACKUP_FILE"
+
+aws s3 cp "$BACKUP_FILE" s3://{{ s3_bucket_name }}/
+
+rm -f "$BACKUP_FILE"
+
