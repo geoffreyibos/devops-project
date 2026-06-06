@@ -9,7 +9,10 @@ const pool = new Pool({
   port: 5432,
   database: process.env.DB_NAME || "appdb",
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
+  password: process.env.DB_PASSWORD,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.get("/api/votes", async (req, res) => {
