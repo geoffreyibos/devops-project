@@ -12,7 +12,7 @@
   ansible.builtin.pip:
     name: awscli
     executable: pip3
-    break_system_packages: true
+    extra_args: --break-system-packages
 
 - name: Create backup directory
   ansible.builtin.file:
